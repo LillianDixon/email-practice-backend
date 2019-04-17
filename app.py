@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify, session
 from flask_mail import Mail, Message
 from flask_cors import CORS
 from flask_heroku import Heroku
-import config
+# import config
+import os
 
 app=Flask(__name__)
 CORS(app)
@@ -11,8 +12,10 @@ app.config.update(
     MAIL_SERVER = 'smtp.gmail.com',
     MAIL_PORT = 465,
     MAIL_USE_SSL = True,
-    MAIL_USERNAME = config.MAIL_USERNAME,
-    MAIL_PASSWORD = config.MAIL_PASSWORD,
+    MAIL_USERNAME = os.environ('MAIL_USERNAME'),
+    MAIL_PASSWORD = os.environ('MAIL_PASSWORD'),
+    # MAIL_USERNAME = config.MAIL_USERNAME,
+    # MAIL_PASSWORD = config.MAIL_PASSWORD,
     MAIL_DEFAULT_SENDER = 'myemail@testemail.com'
 )
 
@@ -29,7 +32,8 @@ def index():
         get_data = request.get_json()
         name = get_data.get('name')
         sender = get_data.get('email')
-        recipients = [config.MAIL_USERNAME]
+        recipients = [os.environ('MAIL_USERNAME')]
+        # recipients = [config.MAIL_USERNAME]
         headers = [name, sender] + recipients
         subject = get_data.get('subject')
         message = get_data.get('message')
